@@ -15,12 +15,13 @@ const int N = 100010;
     简化为找最长链路问题,用树形
 */
 
-struct TreeNode {
-    double prices;  // 价格
-    int len;        // 长度
-    int idx;        // 对应下标
-    int parent;     // 父节点下标
-    vector<TreeNode*> childs;
+struct TreeNode
+{
+    double prices; // 价格
+    int len;       // 长度
+    int idx;       // 对应下标
+    int parent;    // 父节点下标
+    vector<TreeNode *> childs;
     TreeNode(){};
     TreeNode(double p, int l, int idx)
         : prices(p), len(l), idx(idx){};
@@ -30,23 +31,25 @@ struct TreeNode {
 int n;
 double p, r;
 
-int num = 0;  // 售卖最高价的零售商的个数
+int num = 0; // 售卖最高价的零售商的个数
 
 vector<int> path;
 int maxPath = 0;
 int numOfMaxPath = 0;
 double maxPrice;
-TreeNode* root;
+TreeNode *root;
 // 节点对应的TreeNode
-unordered_map<int, TreeNode*> indexs;
+unordered_map<int, TreeNode *> indexs;
 // 父亲节点对应的子节点
 vector<int> inflect[N];
 
-void buildTree(int idx) {
-    TreeNode* node = indexs[idx];
+void buildTree(int idx)
+{
+    TreeNode *node = indexs[idx];
     vector<int> childList = inflect[idx];
-    for (auto i : childList) {
-        TreeNode* child = indexs[i];
+    for (auto i : childList)
+    {
+        TreeNode *child = indexs[i];
         node->childs.emplace_back(child);
         child->len = node->len + 1;
         child->prices = node->prices * (1 + (r / 100));
@@ -54,41 +57,53 @@ void buildTree(int idx) {
     }
 }
 
-void dfs(TreeNode* node) {
-    if (node == nullptr) {
+void dfs(TreeNode *node)
+{
+    if (node == nullptr)
+    {
         return;
     }
 
-    if (node->childs.size() == 0) {
-        if (node->len > maxPath) {
+    if (node->childs.size() == 0)
+    {
+        if (node->len > maxPath)
+        {
             maxPath = node->len;
             numOfMaxPath = 1;
             maxPrice = node->prices;
-        } else if (node->len == maxPath) {
+        }
+        else if (node->len == maxPath)
+        {
             numOfMaxPath++;
         }
         return;
     }
-    for (auto child : node->childs) {
+    for (auto child : node->childs)
+    {
         dfs(child);
     }
 }
 
-int main() {
+int main()
+{
     cin >> n >> p >> r;
     // 遍历每个商户
     int rootIdx;
-    for (int i = 0; i < n; i++) {
+    for (int i = 0; i < n; i++)
+    {
         int parent;
-        cin >> parent;  // 父节点
+        cin >> parent; // 父节点
 
-        if (parent == -1) {
+        if (parent == -1)
+        {
             root = new TreeNode(p, 1, i);
             indexs[i] = root;
             root->parent = parent;
             rootIdx = i;
-        } else {
-            TreeNode* node = new TreeNode();
+        }
+        else
+        {
+            TreeNode *node = new TreeNode();
             node->idx = i;
             node->parent = parent;
             indexs[i] = node;
